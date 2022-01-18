@@ -3,27 +3,35 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: flaskdemo
-  name: flaskdemo
+    app: flask
+    tier: frontend
+  name: web-flask
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: flaskdemo
+      app: flask
+      tier: frontend
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: flaskdemo
+        app: flask
+        tier: frontend
     spec:
       containers:
-      - image: croguerrero/pytest:6
-        name: flaskdemo
-        resources: {}
-      - image: "redis:alpine"
-        name: redis
-
+      - env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        image: croguerrero/pytest:6
+        name: web-flask
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
 status: {}
 ---
 apiVersion: v1
@@ -35,7 +43,63 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
-    targetPort: 5000
+  - port: 8080
+    targetPort: 8080
   selector:
     app: flaskdemo
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: redis
+    role: master
+    tier: backend
+  name: redis-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+      role: master
+      tier: backend
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: redis
+        role: master
+        tier: backend
+    spec:
+      containers:
+      - image: redis
+        name: redis-master
+        ports:
+        - containerPort: 6379
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: redis
+    role: master
+    tier: backend
+  name: redis-master
+spec:
+  ports:
+  - port: 6379 
+    protocol: TCP
+    targetPort: 6379
+  selector:
+    app: redis
+    role: master
+    tier: backend
