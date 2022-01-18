@@ -28,10 +28,7 @@ spec:
         name: web-flask
         ports:
         - containerPort: 8080
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
+        
 status: {}
 ---
 apiVersion: v1
@@ -79,10 +76,7 @@ spec:
         name: redis-master
         ports:
         - containerPort: 6379
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
+        
 status: {}
 ---
 apiVersion: v1
