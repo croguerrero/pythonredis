@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-pythonredis
+  labels:
+    app: pythonredis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pythonredis
+  template:
+    metadata:
+      labels:
+        app: pythonredis
+    spec:
+      containers:
+      - name: myapp
+        image: gcr.io/..../pythonredis:v1   #Insert the specific route...
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            cpu: 200m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pythonredis-service
+spec:
+  selector:
+    app: myapp
+    version: blue
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: LoadBalancer
