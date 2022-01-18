@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: myapp
-        image: croguerrero/pytest:1   #Insert the specific route...
+        image: croguerrero/pytest:latest
         ports:
         - containerPort: 5000
         resources:
