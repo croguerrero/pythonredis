@@ -26,16 +26,7 @@ node {
         }
     }
     
-    stage('Trigger ManifestUpdate') {
-                //echo "triggering updatemanifestjob"
-                build parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-        }
-    stage('Clone repository') {
-      
-
-        checkout scm
-    }
-
+    
     stage('Update GIT') {
             script {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
