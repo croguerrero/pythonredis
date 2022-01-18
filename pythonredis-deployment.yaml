@@ -27,7 +27,7 @@ spec:
         image: croguerrero/pytest:6
         name: web-flask
         ports:
-        - containerPort: 8080
+        - containerPort: 5000
         
 status: {}
 ---
@@ -40,8 +40,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 8080
-    targetPort: 8080
+  - port: 5000
+    targetPort: 5000
   selector:
     app: flaskdemo
 
