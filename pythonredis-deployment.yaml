@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: myapp
-        image: gcr.io/..../pythonredis:v1   #Insert the specific route...
+        image: croguerrero/pytest:1   #Insert the specific route...
         ports:
         - containerPort: 5000
         resources:
