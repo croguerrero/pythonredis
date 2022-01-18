@@ -27,8 +27,8 @@ node {
     }
     
     stage('Trigger ManifestUpdate') {
-                echo "triggering updatemanifestjob"
-                build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+                //echo "triggering updatemanifestjob"
+                build parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
         }
     stage('Clone repository') {
       
@@ -46,7 +46,7 @@ node {
                         //sh "git switch master"
                         sh "cat pythonredis-deployment.yaml"
                         sh "sed -i 's+croguerrero/pytest.*+croguerrero/pytest:${DOCKERTAG}+g' deployment.yaml"
-                        sh "cat deployment.yaml"
+                        sh "cat pythonredis-deployment.yaml"
                         sh "git add ."
                         sh "git commit -m 'Done by Jenkins Job changemanifest: ${env.BUILD_NUMBER}'"
                         sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/pythonredis.git HEAD:main"
