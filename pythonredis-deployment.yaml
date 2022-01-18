@@ -1,38 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapp-pythonredis
+  creationTimestamp: null
   labels:
-    app: pythonredis
+    app: flaskdemo
+  name: flaskdemo
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: pythonredis
+      app: flaskdemo
+  strategy: {}
   template:
     metadata:
+      creationTimestamp: null
       labels:
-        app: pythonredis
+        app: flaskdemo
     spec:
       containers:
-      - name: myapp
-        image: croguerrero/pytest:1   #Insert the specific route...
-        ports:
-        - containerPort: 5000
-        resources:
-          requests:
-            cpu: 200m
+      - image: croguerrero/pytest:6
+        name: flaskdemo
+        resources: {}
+status: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: pythonredis-service
+  name: lb-service
+  labels:
+    app: lb-service
 spec:
-  selector:
-    app: myapp
-    version: blue
-  ports:
-  - protocol: TCP
-    port: 5000
-    targetPort: 5000
   type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 5000
+  selector:
+    app: flaskdemo
